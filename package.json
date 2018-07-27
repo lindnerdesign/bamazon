@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/lindnerdesign/bamazon#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
+    "console.table": "^0.10.0",
     "inquirer": "^6.0.0",
     "mysql": "^2.16.0"
   }

@@ -1,6 +1,11 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var chalk = require("chalk");
 
+var log = console.log;
+
+var red = chalk.rgb(232, 74, 95);
+var blue = chalk.bold.rgb(41, 63, 92);
 // create the connection information for the sql database
 var connection = mysql.createConnection({
   host: "localhost",
@@ -12,87 +17,107 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "",
+  password: "Summer2015",
   database: "bamazon_db"
 });
 
 // connect to the mysql server and sql database
 connection.connect(function(err) {
   if (err) throw err;
-  // console.log("connected as id " + connection.threadId);
-  // itemsForSale();
+  itemList();
 });
 
-// function itemsForSale() {
-//   connection.query("SELECT * FROM products", function(err, res) {
-//     console.log('ITEMS FOR SALE: \n'
-//     + 'ID  |  Product Name  | Department  |  Quanity');
-//     for (var i = 0; i < res.length; i++) {
-//       console.log(res[i].id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].stock_quanity);
-//     }
-//     console.log("-----------------------------------");
-//   });
-// }
 
-function itemsForSale() {
-  // query the database for all items being auctioned
-  connection.query("SELECT * FROM products", function(err, results) {
-    if (err) throw err;
-    // once you have the items, prompt the user for which they'd like to bid on
-    inquirer
-      .prompt([
-        {
-          name: "choice",
-          type: "rawlist",
-          choices: function() {
-            var choiceArray = [];
-            for (var i = 0; i < results.length; i++) {
-              choiceArray.push(results[i]);
-            }
-            return choiceArray;
-          },
-          message: "Current Items Available on Bamazon!"
-        },
-        {
-          name: "IDandQuantity",
-          type: "input",
-          message: "If you'd like to make a purchase, please specify item [ID] and [Quantity] you need."
-        }
-      ])
-      .then(function(answer) {
-        // get the information of the chosen item
-        var chosenItem;
-        for (var i = 0; i < results.length; i++) {
-          if (results[i].id && results[i].quantity === answer.choice) {
-            chosenItem = results[i];
-          }
-        }
-
-        // determine if product is still in stock
-        if (chosenItem.quanity < parseInt(0) {
-          // bid was high enough, so update db, let the user know, and start over
-          connection.query(
-            "UPDATE auctions SET ? WHERE ?",
-            [
-              {
-                id: answer.id
-              },
-              {
-                quantity: chosenItem.quanity
+function itemList() {
+  log(red('. ..-->>|| WELCOME TO BAMAZON ||<<--.. .'));
+  inquirer
+    .prompt({
+      name: "action",
+      type: "confirm",
+      message: "Would you like to see our product list?"
+    })
+    .then(function(answer) {
+      if (answer.action === true){
+        var query = "SELECT * FROM products";
+          connection.query(query, function(err, res) {
+            log(red('\n' + 'BAMAZON PRODUCT LIST \n' + '---------------------------------------------------------------------'));
+            for (var i = 0; i < res.length; i++) {
+              log(("ID:" + res[i].id).padEnd(9) + "Product: " + (res[i].product_name).padEnd(20) + "Department: " + (res[i].department_name).padEnd(15) + "Price: " + (res[i].price).toString().padEnd(10) + "Quantity: " + res[i].stock_quantity);
               }
-            ],
-            function(error) {
-              if (error) throw err;
-              console.log("Order has been placed successfully!");
-              // start();
-            }
-          );
-        }
-        else {
-          // Quantity isnt high enough, start over
-          console.log("Insufficent Quantity");
-          // start();
+              log('\n');
+              pickItems();
+            })
+          } else {
+          log(red("Thank you, come again"));
+      }
+    });
+}
+
+function pickItems() {
+  inquirer
+    .prompt([
+      {
+  			name: "id",
+  			type: "input",
+  			message: "Please enter the ID number of the item you'd like to purchase.",
+  			validate: function(value) {
+  				if (value <= 0 || isNaN(value)) {
+  					log("Please enter a valid item ID");
+  				} else {
+  					return true;
+  				}
+  			}
+  		},
+  		{
+  			name: "quantity",
+  			type: "input",
+  			message: "Please enter the quantity of the item you'd like to purchase.",
+  			validate: function(value) {
+  				if (isNaN(value)) {
+  			    log("Please enter a valid number.");
+  				} else {
+  					return true;
+  				}
+  			}
+  		}
+  	]).then(function(answer) {
+      itemID = answer.id;
+  		itemQuantity = answer.quantity;
+
+      connection.query("SELECT * FROM products WHERE id=" + itemID, function(err, res) {
+  			selected = res[0];
+
+        if (itemQuantity > selected.stock_quantity && selected.stock_quantity > 1) {
+          statement = "Sorry, we only have " + selected.stock_quantity + " " + selected.product_name + "s available.";
+          log(statement);
+          promptUser();
+
+        } else if (itemQuantity > selected.stock_quantity && selected.stock_quantity === 1) {
+          statement = "Sorry, we only have 1 " + selected.product_name + " available.";
+          log(statement);
+          promptUser();
+
+        } else if (itemQuantity > selected.stock_quantity && selected.stock_quantity < 1) {
+          statement = "Sorry, " + selected.product_name + " is out of stock.";
+          log(statement);
+          promptUser();
+
+        } else if (+itemQuantity === 1) {
+          statement = "You are purchasing 1 " + selected.product_name + ".";
+          buyProduct();
+
+        } else {
+          statement = "You are purchasing " + itemQuantity + " " + selected.product_name + "s.";
+          buyProduct();
         }
       });
-  });
+    });
+}
+
+function promptUser(){
+
+}
+
+function buyProduct(){
+
 }
