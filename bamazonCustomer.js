@@ -27,8 +27,7 @@ connection.connect(function(err) {
   itemList();
 });
 
-
-function itemList() {
+itemList = () => {
   log(red('. ..-->>|| WELCOME TO BAMAZON ||<<--.. .'));
   inquirer
     .prompt({
@@ -48,12 +47,12 @@ function itemList() {
               pickItems();
             })
           } else {
-          log(red("Thank you, come again"));
+          exit();
       }
     });
 }
 
-function pickItems() {
+pickItems = () => {
   inquirer
     .prompt([
       {
@@ -88,36 +87,68 @@ function pickItems() {
   			selected = res[0];
 
         if (itemQuantity > selected.stock_quantity && selected.stock_quantity > 1) {
-          statement = "Sorry, we only have " + selected.stock_quantity + " " + selected.product_name + "s available.";
-          log(statement);
-          promptUser();
+          log(`Sorry, we only have ${selected.stock_quantity}  " "  ${selected.product_name} s available.`);
+          pickItems();
 
         } else if (itemQuantity > selected.stock_quantity && selected.stock_quantity === 1) {
-          statement = "Sorry, we only have 1 " + selected.product_name + " available.";
-          log(statement);
-          promptUser();
+          log(`Sorry, we only have 1 ${selected.product_name} available.`);
+          pickItems();
 
         } else if (itemQuantity > selected.stock_quantity && selected.stock_quantity < 1) {
-          statement = "Sorry, " + selected.product_name + " is out of stock.";
-          log(statement);
-          promptUser();
+          log(`Sorry, ${selected.product_name} is out of stock.`);
+          pickItems();
 
         } else if (+itemQuantity === 1) {
-          statement = "You are purchasing 1 " + selected.product_name + ".";
-          buyProduct();
+          log("You are purchasing 1 " + selected.product_name + ".");
+          buyItem();
 
         } else {
-          statement = "You are purchasing " + itemQuantity + " " + selected.product_name + "s.";
-          buyProduct();
+          log(`You are purchasing ${itemQuantity} " " ${selected.product_name} 's.`);
+          buyItem();
         }
       });
     });
 }
 
-function promptUser(){
-
+buyItem = () => {
+	inquirer
+    .prompt([
+      {
+			name: "buy",
+			type: "confirm",
+			message: "Would you like to check out?"
+		}
+    ]).then(function(answer) {
+		if (answer.buy) {
+			connection.query("UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ?", [itemQuantity, itemID], function(err, res) {
+				if (err) throw err;
+        log(`Your total: $ ${itemQuantity * selected.price}`);
+        buyDifferentItem();
+			});
+		} else {
+			buyDifferentItem();
+		}
+	});
 }
 
-function buyProduct(){
+buyDifferentItem = () => {
+	inquirer
+    .prompt([
+      {
+			name: "differentItem",
+			type: "confirm",
+			message: "Would you like to purchase a different item?"
+		}
+    ]).then(function(answer) {
+		if (answer.differentItem) {
+			pickItems();
+		} else {
+			exit();
+		}
+	});
+}
 
+exit = () => {
+	log("Thank you, please come again!");
+	connection.end();
 }
