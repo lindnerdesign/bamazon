@@ -7,22 +7,15 @@ var log = console.log;
 var red = chalk.rgb(232, 74, 95);
 var orange = chalk.rgb(241, 105, 72);
 var blue = chalk.rgb(50, 149, 152);
-// create the connection information for the sql database
+
 var connection = mysql.createConnection({
   host: "localhost",
-
-  // Your port; if not 3306
   port: 3306,
-
-  // Your username
   user: "root",
-
-  // Your password
   password: "",
   database: "bamazon_db"
 });
 
-// connect to the mysql server and sql database
 connection.connect(function(err) {
   if (err) throw err;
   itemList();

@@ -15,40 +15,40 @@ CREATE TABLE products(
 
 -- one
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Workout Leggings", "Womens", 50, 5);
+VALUES ("Workout Leggings", "Womens", 50, 25);
 
 -- two
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Gym Shoes", "Fitness", 125, 5);
+VALUES ("Gym Shoes", "Fitness", 125, 30);
 
 -- three
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Blender", "Kitchen", 80, 3);
+VALUES ("Blender", "Kitchen", 80, 18);
 
 -- four
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Rice Cooker", "Kitchen", 35, 2);
+VALUES ("Rice Cooker", "Kitchen", 35, 33);
 
 -- five
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Dog Collar", "Pets", 15, 5);
+VALUES ("Dog Collar", "Pets", 15, 50);
 
 -- six
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Dog Frisbee", "Pets", 12, 5);
+VALUES ("Dog Frisbee", "Pets", 12, 20);
 
 -- seven
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Fishing Pole", "Outdoor", 150, 2);
+VALUES ("Fishing Pole", "Outdoor", 150, 22);
 
 -- eight
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Grill", "Outdoor", 1500, 1);
+VALUES ("Grill", "Outdoor", 1500, 15);
 
 -- nine
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Tent", "Outdoor", 250, 2);
+VALUES ("Tent", "Outdoor", 250, 19);
 
 -- ten
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Sunglasses", "Womens", 75, 2);
+VALUES ("Sunglasses", "Womens", 75, 75);
