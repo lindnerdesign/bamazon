@@ -41,7 +41,7 @@ managerList = () => {
             addInventory();
         
         } else if (answer.managerList === 'Add new item'){
-            newNewItem();
+            addNewItem();
 
         } else if (answer.managerList === 'Exit Bamazon Manager Tool') {
             exit();
@@ -95,12 +95,100 @@ lowInventory = () => {
 }
 
 addInventory = () => {
-//TODO add to stock_quantity
+    inquirer
+    .prompt([
+        {
+        name: "itemID",
+        type: "input",
+        message: "Enter item ID you would like to add product to.",
+        validate: function(value) {
+            if (value <= 0 || isNaN(value)) {
+                log("Not a valid ID number.");
+            } else {
+                return true;
+            }
+        }
+    },
+    {
+        name: "quantity",
+        type: "input",
+        message: "How many items of this product would you like to add to its inventory?",
+        validate: function(value) {
+            if (value <= 0 || isNaN(value)) {
+                log("Not a valid ID number.");
+            } else {
+                return true;
+            }
+        }
+    }
+]).then(function(answer) {
+    connection.query("SELECT * FROM products WHERE id = ?",[answer.itemID], function(err, res) {
+        if (err) throw err;
+        selected = res[0];
+    });
+
+    connection.query("UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?", [answer.quantity, answer.itemID], function(err, res) {
+        if (err) throw err;
+        bamazonList();
+        log(blue("The inventory has been successfully updated!"));
+
+        inquirer
+        .prompt([
+            {
+                name: "addAnother",
+                type: "confirm",
+                message: "Would you like to update another item?"
+            }
+        ]).then(function(answer) {
+            if (answer.addAnother) {
+                bamazonList();
+                addInventory();
+            } else {
+                managerPrompt();
+            }
+            });
+        });
+    });
 }
 
 addNewItem = () => {
-//TODO add to all products columns
-}
+    inquirer
+    .prompt([
+        {
+            name: "product",
+            type: "input",
+            message: "Enter product name:"
+        },
+        {
+            name: "department",
+            type: "input",
+            message: "Enter department name:"
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "Enter product price:"
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "Enter quantity of product:"
+        }
+        ]).then(function(answer) {
+            connection.query("INSERT INTO products SET ?",
+            {
+                product_name: answer.product,
+                department_name: answer.department,
+                price: answer.price,
+                stock_quantity: answer.quantity
+            },
+            function(err, res) {
+                if (err) throw err;
+                log(blue(`${answer.name} was successfully added to the inventory!`));
+                bamazonList();
+            });
+        });
+    }
 
 exit = () => {
 	log(blue("Logged out of Bamazon Manager tool"));
