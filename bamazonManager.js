@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "Summer2015",
+  password: "",
   database: "bamazon_db"
 });
 
@@ -32,7 +32,7 @@ managerList = () => {
     })
     .then(function(answer) {
         if (answer.managerList === 'View products for sale'){
-            bamazonList();
+            displayProduct();
         
         } else if (answer.managerList === 'View low inventory'){
             lowInventory();
@@ -49,18 +49,25 @@ managerList = () => {
     });
 }
 
-bamazonList = () => {
+displayProduct = () => {
     var query = "SELECT * FROM products";
-
     connection.query(query,(err, res) => {
+        if (err) throw err;
+        console.log(JSON.stringify(res));
+        bamazonList(res);
+    })
+}
+
+bamazonList = (res) => {
+
+    // connection.query(query,(err, res) => {
       log(orange('\n' + 'BAMAZON PRODUCT LIST \n' + '---------------------------------------------------------------------------------------------'));
       for (var i = 0; i < res.length; i++) {
         log(("ID:" + res[i].id).padEnd(9) + "Product: " + (res[i].product_name).padEnd(20) + "Department: " + (res[i].department_name).padEnd(15) + "Price: " + (res[i].price).toString().padEnd(10) + "Quantity: " + res[i].stock_quantity);
         }
         log('\n');
         managerPrompt();
-    }
-)};
+};
 
 managerPrompt = () => {
     inquirer
@@ -82,13 +89,14 @@ lowInventory = () => {
     var queryStock = "SELECT * FROM products WHERE stock_quantity < 5";
 
     connection.query(queryStock,(err, res) => {
-		if (err) throw err;
+        if (err) throw err;
+        
+        // console.log(`Results: ${JSON.stringify(res)}\n`)
 		if (res.length === 0) {
             log(red('No items are low in inventory'));
             managerPrompt();
 		} else {
             log(red('Low Inventory'));
-            //TODO: Why does this not pull only low responses? Gives all responses.
             bamazonList(res);
 		}
 	});

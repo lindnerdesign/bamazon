@@ -12,6 +12,14 @@ CREATE TABLE products(
   PRIMARY KEY (id)
 );
 
+USE bamazon_db;
+
+CREATE TABLE departments(
+  id INT NOT NULL AUTO_INCREMENT,
+  department_name VARCHAR(50) NOT NULL,
+  over_head_costs DECIMAL(10) NOT NULL,
+  PRIMARY KEY (id)
+);
 
 -- one
 INSERT INTO products (product_name, department_name, price, stock_quantity)
