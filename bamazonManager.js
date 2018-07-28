@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "",
+  password: "Summer2015",
   database: "bamazon_db"
 });
 
@@ -52,7 +52,7 @@ managerList = () => {
 bamazonList = () => {
     var query = "SELECT * FROM products";
 
-    connection.query(query, function(err, res) {
+    connection.query(query,(err, res) => {
       log(orange('\n' + 'BAMAZON PRODUCT LIST \n' + '---------------------------------------------------------------------------------------------'));
       for (var i = 0; i < res.length; i++) {
         log(("ID:" + res[i].id).padEnd(9) + "Product: " + (res[i].product_name).padEnd(20) + "Department: " + (res[i].department_name).padEnd(15) + "Price: " + (res[i].price).toString().padEnd(10) + "Quantity: " + res[i].stock_quantity);
@@ -81,7 +81,7 @@ managerPrompt = () => {
 lowInventory = () => {
     var queryStock = "SELECT * FROM products WHERE stock_quantity < 5";
 
-    connection.query(queryStock, function(err, res){
+    connection.query(queryStock,(err, res) => {
 		if (err) throw err;
 		if (res.length === 0) {
             log(red('No items are low in inventory'));
@@ -122,12 +122,12 @@ addInventory = () => {
         }
     }
 ]).then(function(answer) {
-    connection.query("SELECT * FROM products WHERE id = ?",[answer.itemID], function(err, res) {
+    connection.query("SELECT * FROM products WHERE id = ?",[answer.itemID],(err, res) => {
         if (err) throw err;
         selected = res[0];
     });
 
-    connection.query("UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?", [answer.quantity, answer.itemID], function(err, res) {
+    connection.query("UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?", [answer.quantity, answer.itemID], (err, res) => {
         if (err) throw err;
         bamazonList();
         log(blue("The inventory has been successfully updated!"));
