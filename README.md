@@ -3,13 +3,15 @@ Bamazon is an Amazon-like storefront built with mySQL. The app will take in orde
 
 ## Apps ##
 
-*Bamazon Customer App
+**Bamazon Customer App**
+
 ![Bamazon Customer GIF](/assets/BamazonCustomerVideo.gif)
 
 
 [Full Res Video Link](https://drive.google.com/file/d/1PEywy0hW1A8IBEmdVvnijl9NBtxFqQMZ/view?usp=sharing)
 
-*Bamazon Managers App
+**Bamazon Managers App**
+
 ![Bamazon Customer GIF](/assets/BamazonManagerVideo.gif)
 
 
