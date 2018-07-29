@@ -53,13 +53,13 @@ displayProduct = () => {
     var query = "SELECT * FROM products";
     connection.query(query,(err, res) => {
         if (err) throw err;
-        console.log(JSON.stringify(res));
+        // console.log(JSON.stringify(res));
         bamazonList(res);
     })
 }
 
 bamazonList = (res) => {
-
+    
     // connection.query(query,(err, res) => {
       log(orange('\n' + 'BAMAZON PRODUCT LIST \n' + '---------------------------------------------------------------------------------------------'));
       for (var i = 0; i < res.length; i++) {
@@ -137,7 +137,6 @@ addInventory = () => {
 
     connection.query("UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?", [answer.quantity, answer.itemID], (err, res) => {
         if (err) throw err;
-        bamazonList();
         log(blue("The inventory has been successfully updated!"));
 
         inquirer
@@ -149,8 +148,8 @@ addInventory = () => {
             }
         ]).then(function(answer) {
             if (answer.addAnother) {
-                bamazonList();
                 addInventory();
+                managerPrompt();
             } else {
                 managerPrompt();
             }
@@ -159,7 +158,7 @@ addInventory = () => {
     });
 }
 
-addNewItem = () => {
+addNewItem = (res) => {
     inquirer
     .prompt([
         {
@@ -190,10 +189,10 @@ addNewItem = () => {
                 price: answer.price,
                 stock_quantity: answer.quantity
             },
-            function(err, res) {
+            function(err, res){
                 if (err) throw err;
-                log(blue(`${answer.name} was successfully added to the inventory!`));
-                bamazonList();
+                log(blue(`Successfully added to the inventory!`));
+                managerPrompt();
             });
         });
     }
