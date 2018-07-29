@@ -9,6 +9,7 @@ CREATE TABLE products(
   department_name VARCHAR(50) NOT NULL,
   price DECIMAL(4) NOT NULL,
   stock_quantity FLOAT(10) NOT NULL,
+  product_sales DECIMAL(10),
   PRIMARY KEY (id)
 );
 
@@ -21,42 +22,50 @@ CREATE TABLE departments(
   PRIMARY KEY (id)
 );
 
--- one
+-- Departments
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Womens", 4000);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Fitness", 1300);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Kitchen", 2500);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Pets", 2000);
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Outdoor", 5500);
+
+
+-- Products
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Workout Leggings", "Womens", 50, 25);
 
--- two
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Gym Shoes", "Fitness", 125, 30);
 
--- three
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Blender", "Kitchen", 80, 18);
+VALUES ("Blender", "Kitchen", 80, 3);
 
--- four
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Rice Cooker", "Kitchen", 35, 33);
 
--- five
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Dog Collar", "Pets", 15, 50);
 
--- six
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Dog Frisbee", "Pets", 12, 20);
 
--- seven
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Fishing Pole", "Outdoor", 150, 22);
 
--- eight
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Grill", "Outdoor", 1500, 15);
 
--- nine
 INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("Tent", "Outdoor", 250, 19);
+VALUES ("Tent", "Outdoor", 250, 2);
 
--- ten
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Sunglasses", "Womens", 75, 75);
